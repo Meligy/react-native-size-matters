@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, Text, ScrollView, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, KeyboardAvoidingView, ScrollView, TextInput, Button, StyleSheet } from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 import withScaledSheetSwitch from './behaviors/withScaledSheetSwitch';
+
+const inputBoxHeight = 45;
 
 const scaledSheet = ScaledSheet.create({
     container: {
@@ -11,12 +13,12 @@ const scaledSheet = ScaledSheet.create({
     },
     inputBox: {
         alignSelf: 'stretch',
-        height: '45@ms',
+        height: `${inputBoxHeight}@ms`,
         padding: '6@ms',
         flexDirection: 'row',
     },
     textInput: {
-        paddingHorizontal: '10@ms0.3',
+        paddingHorizontal: '10@s',
         flex: 1,
         borderRadius: '25@ms',
         backgroundColor: 'white',
@@ -30,7 +32,7 @@ const scaledSheet = ScaledSheet.create({
         padding: '10@ms'
     },
     chatText: {
-        fontSize: '15@ms0.3'
+        fontSize: '15@s'
     }
 });
 
@@ -42,7 +44,7 @@ const regularSheet = StyleSheet.create({
     },
     inputBox: {
         alignSelf: 'stretch',
-        height: 45,
+        height: inputBoxHeight,
         padding:6,
         flexDirection: 'row',
     },
@@ -85,9 +87,35 @@ const data = [
     { text: '👋', me: 1},
 ];
 
+const Chat2 = ({ scale }) => {
+    const styles = scale ? scaledSheet : regularSheet;
+    // alert(JSON.stringify(styles));
+    return (
+        // <KeyboardAvoidingView style={styles.container}
+        //     behavior="padding" keyboardVerticalOffset={inputBoxHeight + 40}>
+        <View style={styles.container}>
+            <View style={{ flex: 1, height: '100%', backgroundColor: '#DDD' }}>
+                <ScrollView>
+                    {data.map((entry, i) => <View key={i} style={[styles.chatBox, {
+                        alignSelf: entry.me ? 'flex-end' : 'flex-start',
+                        backgroundColor: entry.me ? '#B6F6B3' : 'white'
+                    }]}>
+                        <Text style={[styles.chatText, { alignSelf: entry.me ? 'flex-end' : 'flex-start' }]}>{entry.text}</Text>
+                    </View>)}
+                </ScrollView>
+            </View>
+            <View style={styles.inputBox}>
+                <TextInput style={styles.textInput} disabled={true} placeholder={'Type something here...'} />
+                <Button title={'Send'} onPress={() => null} />
+            </View>
+            </View>
+        // </KeyboardAvoidingView>
+    );
+};
+
 const Chat = ({ scale }) => {
     const styles = scale ? scaledSheet : regularSheet;
-    return <View style={styles.container}>
+    return <KeyboardAvoidingView style={styles.container}>
         <View style={{flex: 1, height: '100%', backgroundColor: '#DDD'}}>
             <ScrollView>
                 {data.map((entry, i) => <View key={i} style={[styles.chatBox, {
@@ -102,7 +130,15 @@ const Chat = ({ scale }) => {
             <TextInput style={styles.textInput} disabled={true} placeholder={'Type something here...'}/>
             <Button title={'Send'} onPress={() => null}/>
         </View>
-    </View>
+    </KeyboardAvoidingView>
 };
 
-export default withScaledSheetSwitch(Chat);
+// const wrapped = () => {
+//     const styles = global.sharedState.scale ? scaledSheet : regularSheet;
+//     return <KeyboardAvoidingView style={styles.container}> 
+//         {withScaledSheetSwitch(Chat2)}
+//     </KeyboardAvoidingView>
+// };
+
+export default withScaledSheetSwitch(Chat2);
+// export default wrapped;
