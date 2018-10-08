@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, ScrollView, TextInput, Button, StyleSheet } from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 import withScaledSheetSwitch from './behaviors/withScaledSheetSwitch';
+import Spacer from 'react-native-spacer';
 
 const scaledSheet = ScaledSheet.create({
     container: {
@@ -98,10 +99,10 @@ const Chat = ({ scale }) => {
                 </View>)}
             </ScrollView>
         </View>
-        <View style={styles.inputBox}>
+        <Spacer style={styles.inputBox}>
             <TextInput style={styles.textInput} disabled={true} placeholder={'Type something here...'}/>
             <Button title={'Send'} onPress={() => null}/>
-        </View>
+        </Spacer>
     </View>
 };
 
